@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Scout - Your Space Expert</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 3D Galaxy Background -->
+    <canvas id="galaxyCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🌟</span>
+            <span class="logo-text">Stellar Scout</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#explorer">Explorer</a></li>
+            <li><a href="#ai-lab">AI Lab</a></li>
+            <li><a href="#visualizations">Data</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Stellar Scout</h1>
+            <p class="hero-subtitle">Your Space Expert</p>
+            <p class="hero-description">Hunting Exoplanets Using Artificial Intelligence</p>
+            <button class="cta-button" onclick="scrollToSection('explorer')">
+                Explore Now
+                <span class="button-arrow">→</span>
+            </button>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-dot"></div>
+        </div>
+        
+        <!-- Live Stats -->
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-number" id="totalExoplanets">---</div>
+                <div class="stat-label">Confirmed Exoplanets</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="habitableExoplanets">---</div>
+                <div class="stat-label">Potentially Habitable</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="recentDiscoveries">---</div>
+                <div class="stat-label">Discoveries (2024)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exoplanet Explorer Section -->
+    <section id="explorer" class="explorer-section">
+        <div class="section-header">
+            <h2 class="section-title">Exoplanet Explorer</h2>
+            <p class="section-subtitle">Discover worlds beyond our solar system</p>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by planet or star name...">
+                <button class="search-btn" onclick="searchExoplanets()">
+                    <span>🔍</span>
+                </button>
+            </div>
+            
+            <div class="filter-controls">
+                <select id="discoveryMethodFilter" onchange="applyFilters()">
+                    <option value="">All Methods</option>
+                    <option value="Transit">Transit</option>
+                    <option value="Radial Velocity">Radial Velocity</option>
+                    <option value="Imaging">Direct Imaging</option>
+                    <option value="Microlensing">Microlensing</option>
+                </select>
+                
+                <select id="habitableFilter" onchange="applyFilters()">
+                    <option value="">All Zones</option>
+                    <option value="habitable">Habitable Zone</option>
+                    <option value="hot">Hot Zone</option>
+                    <option value="cold">Cold Zone</option>
+                </select>
+
+                <button class="reset-btn" onclick="resetFilters()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Exoplanet Cards Container -->
+        <div class="exoplanet-grid" id="exoplanetGrid">
+            <!-- Cards will be dynamically loaded here -->
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading exoplanets...</p>
+            </div>
+        </div>
+
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreExoplanets()">
+            Load More Exoplanets
+        </button>
+    </section>
+
+    <!-- AI Detection Lab Section -->
+    <section id="ai-lab" class="ai-lab-section">
+        <div class="section-header">
+            <h2 class="section-title">AI Detection Lab</h2>
+            <p class="section-subtitle">Use AI to predict exoplanet presence</p>
+        </div>
+
+        <div class="ai-lab-container">
+            <div class="input-panel">
+                <h3>Stellar Parameters</h3>
+                <form id="aiPredictionForm" onsubmit="predictExoplanet(event)">
+                    <div class="form-group">
+                        <label for="starTemp">Star Temperature (K)</label>
+                        <input type="number" id="starTemp" placeholder="e.g., 5778" required>
+                        <small>Sun: 5778K</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="starRadius">Star Radius (Solar Radii)</label>
+                        <input type="number" step="0.01" id="starRadius" placeholder="e.g., 1.0" required>
+                        <small>Sun: 1.0</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="starMass">Star Mass (Solar Masses)</label>
+                        <input type="number" step="0.01" id="starMass" placeholder="e.g., 1.0" required>
+                        <small>Sun: 1.0</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orbitalPeriod">Orbital Period (days)</label>
+                        <input type="number" step="0.01" id="orbitalPeriod" placeholder="e.g., 365.25" required>
+                        <small>Earth: 365.25 days</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transitDepth">Transit Depth (%)</label>
+                        <input type="number" step="0.001" id="transitDepth" placeholder="e.g., 0.01" required>
+                        <small>Smaller = smaller planet</small>
+                    </div>
+
+                    <button type="submit" class="predict-btn">
+                        <span>🤖</span> Predict with AI
+                    </button>
+                </form>
+            </div>
+
+            <div class="results-panel" id="resultsPanel">
+                <h3>AI Prediction Results</h3>
+                <div class="results-placeholder">
+                    <div class="placeholder-icon">🔬</div>
+                    <p>Enter stellar parameters and click predict to see AI analysis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Visualizations Section -->
+    <section id="visualizations" class="visualizations-section">
+        <div class="section-header">
+            <h2 class="section-title">Data Universe</h2>
+            <p class="section-subtitle">Explore exoplanet statistics and trends</p>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Discovery Timeline</h3>
+                <canvas id="timelineChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Detection Methods</h3>
+                <canvas id="methodsChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Planet Size Distribution</h3>
+                <canvas id="sizeChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Distance from Earth</h3>
+                <canvas id="distanceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="section-header">
+            <h2 class="section-title">About Mission</h2>
+            <p class="section-subtitle">How Stellar Scout works</p>
+        </div>
+
+        <div class="about-content">
+            <div class="method-card">
+                <div class="method-icon">🔭</div>
+                <h3>Transit Method</h3>
+                <p>Detects planets by measuring the dimming of starlight when a planet passes in front of its host star. Most successful method used by Kepler and TESS missions.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">📡</div>
+                <h3>Radial Velocity</h3>
+                <p>Measures the wobble of a star caused by the gravitational pull of orbiting planets. Detects the Doppler shift in the star's spectrum.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">🤖</div>
+                <h3>AI Detection</h3>
+                <p>Machine learning models analyze light curves and stellar parameters to identify exoplanet signals, reducing false positives and accelerating discovery.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">📊</div>
+                <h3>NASA Data</h3>
+                <p>Real-time data from NASA Exoplanet Archive, including discoveries from Kepler, TESS, and ground-based observatories worldwide.</p>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h3>Powered By</h3>
+            <div class="tech-logos">
+                <span class="tech-badge">NASA API</span>
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">TensorFlow</span>
+                <span class="tech-badge">FastAPI</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-icon">🌟</span>
+                <span>Stellar Scout</span>
+            </div>
+            <p>Powered by Auron Tech</p>
+            <p class="footer-tagline">Exploring the cosmos, one exoplanet at a time</p>
+        </div>
+    </footer>
+
+    <!-- Planet Detail Modal -->
+    <div class="modal" id="planetModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                <!-- Planet details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="three.min.js"></script>
+    <script src="chart.min.js"></script>
+    <script src="galaxy.js"></script>
+</body>
+</html>
